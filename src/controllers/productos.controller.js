@@ -17,6 +17,7 @@ export const obtenerProductos = async (req, res) => {
     const [data] = await pool.query(`select * from productos;`)
     res.status(200).json({ Status: "Productos obtenidos con exito", data });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ Status: "Error" });
   }
 };
@@ -40,6 +41,19 @@ export const actualizarProducto = async (req, res) => {
     await pool.query(`update productos set descripcion = "${descripcion}", precio = ${precio} where idproducto = ${id};`)
     res.status(200).json({ Status: "Producto actualizado con exito" });
   } catch (error) {
+    res.status(500).json({ Status: "Error" });
+  }
+}
+
+export const eliminarProducto = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query(`delete from productos where idproducto = ${id};`)
+    res.status(200).json({ Status: "Producto eliminado con exito" });
+  } catch (error) {
+    if (error.code === "ER_ROW_IS_REFERENCED_2") {
+      return res.status(400).json({ Status: "No se puede eliminar el producto porque esta siendo utilizado" });
+    }
     res.status(500).json({ Status: "Error" });
   }
 }
