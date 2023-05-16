@@ -11,9 +11,9 @@ create table if not exists insumos(
 idinsumo int not null auto_increment,
 nombre varchar(30) not null,
 idmedida int not null,
-primary key(idmedida),
+primary key(idinsumo),
 constraint fk_insumos_idmedida
-foreign key(idinsumo)
+foreign key(idmedida)
 references medidas_insumos(idmedida)
 on delete restrict on update cascade
 );

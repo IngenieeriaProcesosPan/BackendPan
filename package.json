@@ -30,8 +30,5 @@
     "#functions/*": "./src/functions/*",
     "#middlewares/*": "./src/middlewares/*",
     "#routes/*": "./src/routes/*"
-
   }
-  
-
 }
