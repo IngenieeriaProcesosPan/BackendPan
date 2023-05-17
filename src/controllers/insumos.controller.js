@@ -41,4 +41,14 @@ export const eliminarInsumos = async (req, res) => {
   }
 }
 
+export const getInsumosDisponiblesPorAlmacen = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [data] = await pool.query(`select * from insumos where idinsumo not in (select idinsumo from stock_almacen where idalmacen = ${id});`);
+    res.status(200).json({ Status: "Insumos obtenidos con exito", data });
+  } catch (error) {
+    res.status(500).json({ Status: "Error", error });
+    console.error(error);
+  }
+}
 
