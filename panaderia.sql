@@ -49,7 +49,7 @@ primary key(idproducto)
 create table if not exists usuarios(
 idusuario int not null auto_increment,
 nombre varchar(30) not null,
-clave varchar(20) not null,
+clave varchar(50) not null,
 administrador tinyint not null,
 activo tinyint not null,
 primary key(idusuario)
@@ -101,4 +101,18 @@ references productos(idproducto)
 on delete restrict on update cascade
 );
 
+create table if not exists recetas_productos(
+idproducto int not null,
+idinsumo int not null,
+cantidad decimal(10,4),
+primary key(idproducto, idinsumo),
+constraint fk_recetas_productos_idproducto
+foreign key(idproducto)
+references productos(idproducto)
+on delete restrict on update cascade,
+constraint fk_recetas_productos_idinsumo
+foreign key(idinsumo)
+references insumos(idinsumo)
+on delete restrict on update cascade
+);
 
