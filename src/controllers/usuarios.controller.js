@@ -55,13 +55,13 @@ export const eliminarUsuario = async (req, res) => {
 }
 
 export const validarUsuario = async (req, res) => {
-  const { nombre, clave } = req.body;
+  const { idusuario, clave } = req.body;
   try {
-    const [data] = await pool.query(`select * from usuarios where nombre = "${nombre}";`);
+    const [data] = await pool.query(`select * from usuarios where idusuario = "${idusuario}";`);
     if (data.length > 0) {
       const valid = await compare(clave, data[0].clave);
       if (valid) {
-        res.status(200).json({ Status: "Usuario validado con exito", data });
+        res.status(200).json({ Status: "Usuario validado con exito", data: {idusuario: data[0].idusuario, admin: Boolean(data[0].administrador)} });
       } else {
         res.status(401).json({ Status: "Usuario o contraseña incorrectos" });
       }

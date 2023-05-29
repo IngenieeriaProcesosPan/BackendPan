@@ -1,3 +1,4 @@
+-- DATABASE
 create database if not exists panaderia;
 use panaderia;
 
@@ -60,7 +61,7 @@ idturno int not null auto_increment,
 fondo decimal(10,2) not null,
 apertura datetime not null,
 cierre datetime null,
-idusuario int,
+idusuario int not null,
 efectivo decimal(10,2),
 primary key(idturno),
 constraint fk_turno_idusuario
@@ -69,37 +70,53 @@ references usuarios(idusuario)
 on delete restrict on update cascade
 );
 
-create table if not exists cheques(
+create table if not exists estatus(
+idestatus int not null auto_increment,
+estatus varchar(45) not null,
+primary key(idestatus)
+);
+
+create table if not exists ventas(
 folio bigint not null auto_increment,
 apertura datetime not null,
 cierre datetime null,
-pagado tinyint not null,
-cancelado tinyint not null,
-cambio decimal(10,2) null,
+idestatus int not null,
 idturno int not null,
 total decimal(10,2) null,
 primary key(folio),
-constraint fk_cheques_folio
+constraint fk_ventas_idturno
 foreign key(idturno)
 references turno(idturno)
+on delete restrict on update cascade,
+constraint fk_ventas_idestatus
+foreign key(idestatus)
+references estatus(idestatus)
 on delete restrict on update cascade
 );
 
-create table if not exists cheqdet(
+create table if not exists detalleVentas(
 foliodet bigint not null,
 movimiento int not null,
 cantidad int not null,
 idproducto int not null,
+precio int not null,
+idestatus int not null,
 primary key(foliodet, movimiento),
-constraint fk_cheqdet_foliodet
+constraint fk_detalleVentas_foliodet
 foreign key(foliodet)
-references cheques(folio)
+references ventas(folio)
 on delete restrict on update cascade,
-constraint fk_cheqdet_idproducto
+constraint fk_detalleVentas_idproducto
 foreign key(idproducto)
 references productos(idproducto)
+on delete restrict on update cascade,
+constraint fk_detalleVentas_idestatus
+foreign key(idestatus)
+references estatus(idestatus)
 on delete restrict on update cascade
 );
+
+
 
 create table if not exists recetas_productos(
 idproducto int not null,
@@ -115,4 +132,27 @@ foreign key(idinsumo)
 references insumos(idinsumo)
 on delete restrict on update cascade
 );
+
+create table if not exists stock_productos(
+idproducto int not null,
+cantidad int not null,
+primary key(idproducto),
+constraint fk_stock_productos_idproducto
+foreign key(idproducto)
+references productos(idproducto)
+on delete restrict on update cascade
+);
+
+create table if not exists produccion_productos(
+fechaproduccion datetime not null,
+idproducto int not null,
+cantidad int not null,
+primary key(idproducto, fechaproduccion),
+constraint fk_produccion_productos_idproducto
+foreign key(idproducto)
+references productos(idproducto)
+on delete restrict on update cascade
+);
+
+insert into usuarios (nombre, clave, administrador, activo) values ("admin", "202cb962ac59075b964b07152d234b70", 1, 1);
 
