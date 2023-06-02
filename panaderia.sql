@@ -51,8 +51,8 @@ create table if not exists usuarios(
 idusuario int not null auto_increment,
 nombre varchar(30) not null,
 clave varchar(50) not null,
-administrador tinyint not null,
-activo tinyint not null,
+administrador tinyint(1) not null,
+activo tinyint(1) not null,
 primary key(idusuario)
 );
 
@@ -99,7 +99,7 @@ foliodet bigint not null,
 movimiento int not null,
 cantidad int not null,
 idproducto int not null,
-precio int not null,
+precio decimal(10,2) not null,
 idestatus int not null,
 primary key(foliodet, movimiento),
 constraint fk_detalleVentas_foliodet
